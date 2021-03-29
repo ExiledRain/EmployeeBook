@@ -1,4 +1,5 @@
 # Release Notes
 
-## 0.0.1-SNAPSHOT
-* Added Spring boot skeleton
+## 0.0.2-SNAPSHOT
+* Added Spring boot skeleton.
+* Configured Mysql DB connection.
