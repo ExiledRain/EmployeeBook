@@ -2,6 +2,8 @@ package io.exiled.employeebooking.controller;
 
 import io.exiled.employeebooking.model.Employee;
 import io.exiled.employeebooking.repository.EmployeeRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,12 @@ public class EmployeeControllerV1 {
         this.employeeRepository = employeeRepository;
     }
 
+
     @GetMapping("/employees")
+    @ApiOperation(value = "Finds all Employees",
+            notes = "If you want to see entire collection of contacts",
+            response = List.class
+    )
     public ResponseEntity<List<Employee>> getAllEmployees(@RequestParam(required = false) String firstNameFilter) {
         try {
             List<Employee> employeeList = new ArrayList<>();
@@ -47,7 +54,11 @@ public class EmployeeControllerV1 {
     }
 
     @GetMapping("/employees/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+    @ApiOperation(value = "Finds Employee by specified ID",
+            notes = "If you want to find a Single Employee by ID",
+            response = Employee.class
+    )
+    public ResponseEntity<Employee> getEmployeeById(@ApiParam(value = "ID value for the Employee you need to retrieve", required = true)@PathVariable Long id) {
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         if (employeeOptional.isPresent()) {
             return new ResponseEntity<>(employeeOptional.get(), HttpStatus.OK);
@@ -57,6 +68,10 @@ public class EmployeeControllerV1 {
     }
 
     @GetMapping("/employees/active")
+    @ApiOperation(value = "Finds all active Employees",
+            notes = "If you want to see entire collection of Employees that have field 'active' =  true",
+            response = Employee.class
+    )
     public ResponseEntity<List<Employee>> findByActive() {
         try {
             List<Employee> activeEmployees = employeeRepository.findByActive(true);
@@ -72,6 +87,10 @@ public class EmployeeControllerV1 {
     }
 
     @PostMapping("/employees")
+    @ApiOperation(value = "Create new Employee",
+            notes = "Creates a specified Employee",
+            response = Employee.class
+    )
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee newEmployee) {
         try {
             Employee employee = new Employee();
@@ -84,7 +103,11 @@ public class EmployeeControllerV1 {
     }
 
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee newEmployee) {
+    @ApiOperation(value = "Edit and Employee",
+            notes = "If you want to edit specific Employee found by defined ID",
+            response = Employee.class
+    )
+    public ResponseEntity<Employee> updateEmployee(@ApiParam(value = "ID value for the Employee you need to update", required = true)@PathVariable Long id, @RequestBody Employee newEmployee) {
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         if (employeeOptional.isPresent()) {
             Employee employee = employeeOptional.get();
@@ -96,6 +119,9 @@ public class EmployeeControllerV1 {
     }
 
     @DeleteMapping("/employees")
+    @ApiOperation(value = "Deletes all Employees",
+            notes = "If you want to delete all Employees"
+    )
     public ResponseEntity<Employee> deleteAllEmployees() {
         try {
             employeeRepository.deleteAll();
@@ -107,7 +133,10 @@ public class EmployeeControllerV1 {
     }
 
     @DeleteMapping("/employees/{id}")
-    public ResponseEntity<Employee> deleteEmployeeById(@PathVariable Long id) {
+    @ApiOperation(value = "Delete specific Employee",
+            notes = "If you want to delete specific Employee found by ID."
+    )
+    public ResponseEntity<Employee> deleteEmployeeById(@ApiParam(value = "ID value for the Employee you need to delete", required = true)@PathVariable Long id) {
         try {
             employeeRepository.deleteById(id);
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
